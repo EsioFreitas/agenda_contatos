@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:agenda_contatos/helpers/contact_helper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 
 class ContactPage extends StatefulWidget {
@@ -61,6 +62,13 @@ class _ContactPageState extends State<ContactPage> {
           child: Column(
             children: <Widget>[
               GestureDetector(
+                onTap: () {
+                  ImagePicker.pickImage(source: ImageSource.camera).then((file){
+                    setState(() {
+                      _editedContante.img = file.path;
+                    });
+                  });
+                },
                 child: Container(
                   width: 140,
                   height: 140,
@@ -105,7 +113,7 @@ class _ContactPageState extends State<ContactPage> {
     );
   }
 
- Future<bool> _requestPop() {
+  Future<bool> _requestPop() {
     if (_userEdited) {
       showDialog(
           context: context,
