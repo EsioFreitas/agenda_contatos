@@ -4,6 +4,8 @@ import 'package:agenda_contatos/helpers/contact_helper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 
+enum OrderOptions { orderaz, orderza }
+
 class ContactPage extends StatefulWidget {
   Contact contact;
 
@@ -45,6 +47,7 @@ class _ContactPageState extends State<ContactPage> {
           backgroundColor: Colors.red,
           title: Text(_editedContante.name ?? "Novo Contato"),
           centerTitle: true,
+
         ),
         floatingActionButton: FloatingActionButton(
             onPressed: () {
@@ -63,7 +66,8 @@ class _ContactPageState extends State<ContactPage> {
             children: <Widget>[
               GestureDetector(
                 onTap: () {
-                  ImagePicker.pickImage(source: ImageSource.camera).then((file){
+                  ImagePicker.pickImage(source: ImageSource.camera)
+                      .then((file) {
                     setState(() {
                       _editedContante.img = file.path;
                     });
@@ -112,6 +116,7 @@ class _ContactPageState extends State<ContactPage> {
       ),
     );
   }
+
 
   Future<bool> _requestPop() {
     if (_userEdited) {
