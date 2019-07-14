@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:agenda_contatos/helpers/contact_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'contact_page.dart';
 
@@ -129,7 +130,10 @@ class _HomeState extends State<Home> {
                       Padding(
                         padding: EdgeInsets.all(5),
                         child: FlatButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              launch("tel: ${contacts[index].phone}");
+                              Navigator.pop(context);
+                            },
                             child: Text("Ligar",
                                 style: TextStyle(
                                     color: Colors.red, fontSize: 20))),
