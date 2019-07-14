@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:agenda_contatos/helpers/contact_helper.dart';
 import 'package:flutter/material.dart';
 
+import 'contact_page.dart';
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -16,11 +18,7 @@ class _HomeState extends State<Home> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    helper.getAllContact().then((list) {
-      setState(() {
-        contacts = list;
-      });
-    });
+    _getAllContact();
   }
 
   @override
@@ -33,7 +31,9 @@ class _HomeState extends State<Home> {
       ),
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          _showContactPage();
+        },
         backgroundColor: Colors.red,
         child: Icon(Icons.add),
       ),
@@ -48,6 +48,9 @@ class _HomeState extends State<Home> {
 
   Widget _contantCard(BuildContext context, int index) {
     return GestureDetector(
+      onTap: () {
+        _showContactPage(contact: contacts[index]);
+      },
       child: Card(
         child: Padding(
             padding: EdgeInsets.all(10),
@@ -76,12 +79,11 @@ class _HomeState extends State<Home> {
                     ),
                     Text(
                       contacts[index].email ?? "",
-                      style:
-                      TextStyle(fontSize: 18),
-                    ),Text(
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    Text(
                       contacts[index].phone ?? "",
-                      style:
-                      TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 18),
                     ),
                   ],
                 )
@@ -89,5 +91,26 @@ class _HomeState extends State<Home> {
             )),
       ),
     );
+  }
+
+  void _showContactPage({Contact contact}) async {
+    final recContact = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => ContactPage(contact: contact)));
+    if(recContact != null){
+      if(contact != null){
+        await helper.updateContact(recContact);
+      }else{
+        await helper.saveContact(recContact);
+      }
+      _getAllContact();
+    }
+  }
+
+  void _getAllContact() {
+    helper.getAllContact().then((list) {
+      setState(() {
+        contacts = list;
+      });
+    });
   }
 }
