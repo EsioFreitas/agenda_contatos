@@ -49,7 +49,7 @@ class _HomeState extends State<Home> {
   Widget _contantCard(BuildContext context, int index) {
     return GestureDetector(
       onTap: () {
-        _showContactPage(contact: contacts[index]);
+        _showOptions(context, index);
       },
       child: Card(
         child: Padding(
@@ -96,10 +96,10 @@ class _HomeState extends State<Home> {
   void _showContactPage({Contact contact}) async {
     final recContact = await Navigator.push(context,
         MaterialPageRoute(builder: (context) => ContactPage(contact: contact)));
-    if(recContact != null){
-      if(contact != null){
+    if (recContact != null) {
+      if (contact != null) {
         await helper.updateContact(recContact);
-      }else{
+      } else {
         await helper.saveContact(recContact);
       }
       _getAllContact();
@@ -112,5 +112,57 @@ class _HomeState extends State<Home> {
         contacts = list;
       });
     });
+  }
+
+  void _showOptions(BuildContext context, int index) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return BottomSheet(
+              onClosing: () {},
+              builder: (context) {
+                return Container(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.all(5),
+                        child: FlatButton(
+                            onPressed: () {},
+                            child: Text("Ligar",
+                                style: TextStyle(
+                                    color: Colors.red, fontSize: 20))),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(5),
+                        child: FlatButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              _showContactPage(contact: contacts[index]);
+                            },
+                            child: Text("Editar",
+                                style: TextStyle(
+                                    color: Colors.red, fontSize: 20))),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(5),
+                        child: FlatButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              helper.deleteContact(contacts[index].id);
+                              setState(() {
+                                contacts.removeAt(index);
+                              });
+                            },
+                            child: Text("Excluir",
+                                style: TextStyle(
+                                    color: Colors.red, fontSize: 20))),
+                      )
+                    ],
+                  ),
+                );
+              });
+        });
   }
 }
